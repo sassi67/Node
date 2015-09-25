@@ -3,6 +3,12 @@
 #include <QDomDocument>
 #include <QDebug>
 #include <QDomElement>
+#include <QDomNamedNodeMap>
+#include <QMap>
+#include <QDomNode>
+#include <QDomAttr>
+
+#include "node.h"
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
@@ -26,6 +32,27 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
         QDomElement root = dom.documentElement();
 
+        QString rootName = root.nodeName();
+        QString rootValue = "";
+        QMap<QString, QString> attributesMap;
+
+        if (root.hasAttributes())
+        {
+            QDomNamedNodeMap attributes = root.attributes();
+
+            if (!attributes.isEmpty())
+            {
+//                qDebug() << attributes.length();
+                for (int i = 0; i < attributes.length(); ++i)
+                {
+                    QDomAttr attr = attributes.item(i).toAttr();
+
+                    QString attrKey = attr.name();
+                    QString attrVal = attr.value();
+                    attributesMap.insert(attrKey, attrVal);
+                }
+            }
+        }
     }
 }
 
